@@ -1,7 +1,6 @@
-import { ModeToggle } from "@/components/ModeToggle";
+import InitialModal from "@/components/modals/InitialModal";
 import prisma from "@/lib/client";
 import { initialProfile } from "@/lib/initialProfile";
-import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 export default async function SetupPage() {
@@ -21,10 +20,5 @@ export default async function SetupPage() {
         return redirect(`/servers/${server.id}`);
     }
 
-    return (
-        <div>
-            <UserButton />
-            <ModeToggle />
-        </div>
-    );
+    return <InitialModal />;
 }
