@@ -17,9 +17,9 @@ export function ModeToggle() {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger className="focus:outline-none" asChild>
                 <Button
-                    className="bg-transparent border-0 focus:border-0"
+                    className="bg-transparent border-0 focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0"
                     variant="outline"
                     size="icon"
                 >

@@ -26,6 +26,7 @@ import "@uploadthing/react/styles.css";
 import FileUpload from "../FileUpload";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/useModalStore";
+import { useState } from "react";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -49,23 +50,24 @@ function CreateServerModal() {
     const { isOpen, onClose, type } = useModal();
     const router = useRouter();
     const isLoading = form.formState.isSubmitting;
+    const [uploadErrors, setUploadErrors] = useState("");
 
     const isModalOpen = isOpen && type === "createServer";
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             await axios.post("/api/servers", values);
-            form.reset();
             router.refresh();
+            handleClose();
         } catch (error) {
             console.log("error :>> ", error);
         }
     };
 
-    const handleClose = () => {
+    function handleClose() {
         form.reset();
         onClose();
-    };
+    }
 
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -96,9 +98,17 @@ function CreateServerModal() {
                                                     endpoint="serverImage"
                                                     value={field.value}
                                                     onChange={field.onChange}
+                                                    setUploadErrors={
+                                                        setUploadErrors
+                                                    }
                                                 />
                                             </FormControl>
                                             <FormMessage />
+                                            {uploadErrors && (
+                                                <div className="text-red-800 font-semibold">
+                                                    {uploadErrors}
+                                                </div>
+                                            )}
                                         </FormItem>
                                     )}
                                 />

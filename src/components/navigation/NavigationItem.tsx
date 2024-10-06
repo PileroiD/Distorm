@@ -17,7 +17,7 @@ function NavigationItem({ id, imageUrl, name }: { [key: string]: string }) {
         <ActionTooltip label={name}>
             <button
                 onClick={onClick}
-                className="group relative flex items-center"
+                className="group relative flex items-center mb-3"
             >
                 <div
                     className={cn(
@@ -33,7 +33,12 @@ function NavigationItem({ id, imageUrl, name }: { [key: string]: string }) {
                             "bg-primary/70 text-primary rounded-[16px]"
                     )}
                 >
-                    <Image src={imageUrl} alt="channel" fill />
+                    <Image
+                        src={imageUrl}
+                        alt="channel"
+                        fill
+                        className="object-cover"
+                    />
                 </div>
             </button>
         </ActionTooltip>

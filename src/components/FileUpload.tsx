@@ -1,16 +1,25 @@
 "use client";
 
 import { UploadDropzone } from "@/lib/uploadthing";
+import { Json } from "@uploadthing/shared";
 import { X } from "lucide-react";
 import Image from "next/image";
+import { Dispatch, SetStateAction } from "react";
+import { UploadThingError } from "uploadthing/server";
 
 interface FileUploadProps {
     endpoint: "messageFile" | "serverImage";
     onChange: (url?: string) => void;
     value: string;
+    setUploadErrors: Dispatch<SetStateAction<string>>;
 }
 
-function FileUpload({ endpoint, onChange, value }: FileUploadProps) {
+function FileUpload({
+    endpoint,
+    onChange,
+    value,
+    setUploadErrors,
+}: FileUploadProps) {
     const fileType = value?.split(".").pop();
 
     if (value && fileType !== "pdf") {
@@ -38,9 +47,16 @@ function FileUpload({ endpoint, onChange, value }: FileUploadProps) {
             endpoint={endpoint}
             onClientUploadComplete={(res) => {
                 onChange(res[0]?.url);
+                setUploadErrors("");
             }}
-            onUploadError={(error: Error) => {
-                console.log("error upload:>> ", error);
+            onUploadError={(error: UploadThingError<Json>) => {
+                console.log("error upload:>> ", error.message);
+
+                if (error.message === "Invalid config: FileSizeMismatch") {
+                    return setUploadErrors("Large file size");
+                }
+
+                setUploadErrors(error.message);
             }}
         />
     );
