@@ -1,13 +1,14 @@
 import prisma from "@/lib/client";
 import { currentProfile } from "@/lib/currentProfile";
 import { NextResponse } from "next/server";
-import { v4 as uuidv4 } from "uuid";
 
 export const PATCH = async (
     req: Request,
     { params }: { params: { serverId: string } }
 ) => {
     try {
+        const { name, imageUrl } = await req.json();
+
         const profile = await currentProfile();
         if (!profile) {
             return new NextResponse("Unauthorized", { status: 401 });
@@ -25,13 +26,14 @@ export const PATCH = async (
                 profileId: profile.id,
             },
             data: {
-                inviteCode: uuidv4(),
+                name,
+                imageUrl,
             },
         });
 
         return NextResponse.json(server);
     } catch (err) {
-        console.log("[SERVER_ID INVITE CODE PATCH]", err);
+        console.log("[SERVER_ID EDIT SETTINGS PATCH]", err);
         return new NextResponse("Internal Error", { status: 500 });
     }
 };

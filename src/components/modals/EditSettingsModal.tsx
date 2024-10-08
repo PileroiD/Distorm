@@ -25,7 +25,8 @@ import { Button } from "../ui/button";
 import "@uploadthing/react/styles.css";
 import FileUpload from "../FileUpload";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useModal } from "@/hooks/useModalStore";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -36,7 +37,7 @@ const formSchema = z.object({
     }),
 });
 
-function InitialModal() {
+function EditServerSettingsModal() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const form = useForm({
         defaultValues: {
@@ -46,23 +47,42 @@ function InitialModal() {
         resolver: zodResolver(formSchema),
     });
 
-    const [uploadErrors, setUploadErrors] = useState("");
-
+    const {
+        isOpen,
+        onClose,
+        type,
+        data: { server },
+    } = useModal();
     const router = useRouter();
     const isLoading = form.formState.isSubmitting;
+    const [uploadErrors, setUploadErrors] = useState("");
+
+    const isModalOpen = isOpen && type === "editSettings";
+
+    useEffect(() => {
+        if (server) {
+            form.setValue("name", server.name);
+            form.setValue("imageUrl", server.imageUrl);
+        }
+    }, [server, form]);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.post("/api/servers", values);
-            form.reset();
+            await axios.patch(`/api/servers/${server?.id}`, values);
             router.refresh();
+            handleClose();
         } catch (error) {
             console.log("error :>> ", error);
         }
     };
 
+    function handleClose() {
+        form.reset();
+        onClose();
+    }
+
     return (
-        <Dialog open>
+        <Dialog open={isModalOpen} onOpenChange={handleClose}>
             <DialogContent className="bg-white text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
@@ -129,7 +149,7 @@ function InitialModal() {
                         </div>
                         <DialogFooter className="bg-gray-100 px-6 py-4">
                             <Button variant="primary" disabled={isLoading}>
-                                Create
+                                Save
                             </Button>
                         </DialogFooter>
                     </form>
@@ -139,4 +159,4 @@ function InitialModal() {
     );
 }
 
-export default InitialModal;
+export default EditServerSettingsModal;
