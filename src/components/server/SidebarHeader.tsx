@@ -68,7 +68,10 @@ function SidebarHeader({ server, currentUserRole }: SidebarHeaderProps) {
                     </DropdownMenuItem>
                 )}
                 {isModerator && (
-                    <DropdownMenuItem className="hover:text-white transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 hover:outline-none flex items-center px-3 py-2 text-sm cursor-pointer">
+                    <DropdownMenuItem
+                        onClick={() => onOpen("createChannel", { server })}
+                        className="hover:text-white transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 hover:outline-none flex items-center px-3 py-2 text-sm cursor-pointer"
+                    >
                         Create channel
                         <PlusCircle className="h-4 w-4 ml-auto" />
                     </DropdownMenuItem>
