@@ -15,24 +15,24 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-function LeaveServerModal() {
+function DeleteServerModal() {
     const {
         isOpen,
         onClose,
         type,
         data: { server },
     } = useModal();
-    const isModalOpen = isOpen && type === "leaveServer";
+    const isModalOpen = isOpen && type === "deleteServer";
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const onConfirmLeaveServer = async () => {
+    const onConfirmDeleteServer = async () => {
         try {
             setIsLoading(true);
 
-            await axios.patch(`/api/servers/${server?.id}/leave`);
+            await axios.delete(`/api/servers/${server?.id}`);
             onClose();
-            router.push("/");
+            router.refresh();
         } catch (err) {
             console.log("err :>> ", err);
         } finally {
@@ -45,14 +45,14 @@ function LeaveServerModal() {
             <DialogContent className="bg-white text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
-                        Leave server
+                        Delete server
                     </DialogTitle>
                     <DialogDescription className="text-center text-zinc-500">
-                        Are you sure You want to leave{" "}
+                        Are you sure You want to delete{" "}
                         <span className="font-semibold text-indigo-500">
                             {server?.name}
                         </span>
-                        ?
+                        ? <br /> This server will be completely deleted
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="bg-gray-100 px-6 py-4">
@@ -66,7 +66,7 @@ function LeaveServerModal() {
                         </Button>
                         <Button
                             disabled={isLoading}
-                            onClick={onConfirmLeaveServer}
+                            onClick={onConfirmDeleteServer}
                             variant="primary"
                         >
                             Confirm
@@ -78,4 +78,4 @@ function LeaveServerModal() {
     );
 }
 
-export default LeaveServerModal;
+export default DeleteServerModal;

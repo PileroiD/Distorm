@@ -107,7 +107,7 @@ function ManageServerMembersModal() {
                     </DialogDescription>
                 </DialogHeader>
                 <ScrollArea className="mt-8 max-h-[420px] pr-6">
-                    {server?.members.map((member) => (
+                    {server?.members?.map((member) => (
                         <div
                             key={member.id}
                             className="flex items-center gap-x-2 mb-6"
