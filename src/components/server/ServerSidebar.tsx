@@ -81,7 +81,7 @@ async function ServerSidebar({ serverId }: { serverId: string }) {
     });
 
     return (
-        <div className="sm:hidden md:flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
+        <div className="md:flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
             <SidebarHeader server={server} currentUserRole={currentUserRole} />
             <ScrollArea>
                 <div className="flex-1 px-3">

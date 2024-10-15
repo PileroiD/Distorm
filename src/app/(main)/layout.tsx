@@ -4,10 +4,10 @@ interface MainlayoutProps {
     children: React.ReactNode;
 }
 
-async function MainLayout({ children }: MainlayoutProps) {
+function MainLayout({ children }: MainlayoutProps) {
     return (
         <div className="h-full">
-            <div className="sm:hidden md:flex h-full w-[72px] z-30 flex-col fixed inset-y-0">
+            <div className="hidden md:!flex h-full w-[72px] z-30 flex-col fixed inset-y-0">
                 <NavigationSidebar />
             </div>
 
