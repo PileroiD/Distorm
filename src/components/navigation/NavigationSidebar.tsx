@@ -23,6 +23,13 @@ async function NavigationSidebar() {
                 },
             },
         },
+        include: {
+            channels: {
+                where: {
+                    name: "general",
+                },
+            },
+        },
     });
 
     return (
@@ -33,9 +40,8 @@ async function NavigationSidebar() {
                 {servers.map((server) => (
                     <div key={server.id}>
                         <NavigationItem
-                            id={server.id}
-                            imageUrl={server.imageUrl}
-                            name={server.name}
+                            server={server}
+                            generalChannel={server.channels[0]}
                         />
                     </div>
                 ))}

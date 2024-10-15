@@ -4,14 +4,23 @@ import ActionTooltip from "../ActionTooltip";
 import { cn } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import { Channel, Server } from "@prisma/client";
 
-function NavigationItem({ id, imageUrl, name }: { [key: string]: string }) {
+interface NavigationItemProps {
+    server: Server;
+    generalChannel: Channel;
+}
+
+function NavigationItem({ server, generalChannel }: NavigationItemProps) {
     const params = useParams();
     const router = useRouter();
 
-    const onClick = () => {
-        router.push(`/servers/${id}`);
-    };
+    const { id, name, imageUrl } = server;
+
+    const onClick = () =>
+        generalChannel.name === "general"
+            ? router.push(`/servers/${id}/channels/${generalChannel.id}`)
+            : router.push(`/servers/${id}/`);
 
     return (
         <ActionTooltip label={name}>

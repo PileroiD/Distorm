@@ -23,7 +23,7 @@ import qs from "query-string";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import "@uploadthing/react/styles.css";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useModal } from "@/hooks/useModalStore";
 import { ChannelType } from "@prisma/client";
 import {
@@ -52,7 +52,7 @@ function CreateChannelModal() {
         isOpen,
         onClose,
         type,
-        data: { server, channelType },
+        data: { channelType },
     } = useModal();
 
     const form = useForm({
@@ -70,6 +70,7 @@ function CreateChannelModal() {
     }, [channelType, form]);
 
     const router = useRouter();
+    const { serverId } = useParams();
     const isLoading = form.formState.isSubmitting;
 
     const isModalOpen = isOpen && type === "createChannel";
@@ -79,7 +80,7 @@ function CreateChannelModal() {
             const url = qs.stringifyUrl({
                 url: `/api/channels`,
                 query: {
-                    serverId: server?.id,
+                    serverId,
                 },
             });
 
