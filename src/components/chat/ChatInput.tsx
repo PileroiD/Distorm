@@ -4,11 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
-import { Plus, SmileIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Input } from "../ui/input";
 import qs from "query-string";
 import axios from "axios";
 import { useModal } from "@/hooks/useModalStore";
+import EmojiPicker from "../EmojiPicker";
 
 interface ChatInputProps {
     apiUrl: string;
@@ -42,14 +43,27 @@ function ChatInput({ apiUrl, query, name, type }: ChatInputProps) {
             });
 
             await axios.post(url, value);
+            form.reset();
         } catch (error) {
             console.log("error :>> ", error);
         }
     };
 
+    // fixes opened add attachment file modal by pressing enter
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            form.handleSubmit(onSubmit)();
+            form.reset();
+        }
+    };
+
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form
+                onKeyDown={handleKeyDown}
+                onSubmit={form.handleSubmit(onSubmit)}
+            >
                 <FormField
                     control={form.control}
                     name="content"
@@ -78,8 +92,14 @@ function ChatInput({ apiUrl, query, name, type }: ChatInputProps) {
                                         className="px-14 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
                                         {...field}
                                     />
-                                    <div className="absolute top-7 right-8">
-                                        <SmileIcon />
+                                    <div className="absolute right-6 top-7 flex items-center">
+                                        <EmojiPicker
+                                            onChange={(emoji: string) =>
+                                                field.onChange(
+                                                    `${field.value} ${emoji}`
+                                                )
+                                            }
+                                        />
                                     </div>
                                 </div>
                             </FormControl>
