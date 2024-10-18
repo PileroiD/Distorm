@@ -27,6 +27,10 @@ import FileUpload from "../FileUpload";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/useModalStore";
 import { useState } from "react";
+import {
+    FieldChangeProps,
+    onFileFieldChange,
+} from "../utils/onFormFileFieldChange";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -57,11 +61,15 @@ function CreateServerModal() {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             await axios.post("/api/servers", values);
-            handleClose();
             router.refresh();
+            handleClose();
         } catch (error) {
             console.log("error :>> ", error);
         }
+    };
+
+    const onChange = (fields: FieldChangeProps, field: any) => {
+        onFileFieldChange(fields, form, field);
     };
 
     function handleClose() {
@@ -74,7 +82,7 @@ function CreateServerModal() {
             <DialogContent className="bg-white text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
-                        Customize your server
+                        Create your server
                     </DialogTitle>
                     <DialogDescription className="text-center text-zinc-500">
                         Give your server a personality with a name and an image.
@@ -97,7 +105,9 @@ function CreateServerModal() {
                                                 <FileUpload
                                                     endpoint="serverImage"
                                                     value={field.value}
-                                                    onChange={field.onChange}
+                                                    onChange={(fields) =>
+                                                        onChange(fields, field)
+                                                    }
                                                     setUploadErrors={
                                                         setUploadErrors
                                                     }

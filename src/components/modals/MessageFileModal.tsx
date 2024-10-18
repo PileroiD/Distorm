@@ -26,11 +26,19 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useModal } from "@/hooks/useModalStore";
 import qs from "query-string";
+import {
+    FieldChangeProps,
+    onFileFieldChange,
+} from "../utils/onFormFileFieldChange";
 
 const formSchema = z.object({
     fileUrl: z.string().min(1, {
         message: "Attachment is required",
     }),
+    fileType: z.string().min(1, {
+        message: "Wrong file type",
+    }),
+    fileName: z.string(),
 });
 
 function MessageFileModal() {
@@ -46,6 +54,8 @@ function MessageFileModal() {
     const form = useForm({
         defaultValues: {
             fileUrl: "",
+            fileType: "",
+            fileName: "",
         },
         resolver: zodResolver(formSchema),
     });
@@ -55,6 +65,10 @@ function MessageFileModal() {
     const router = useRouter();
     const isLoading = form.formState.isSubmitting;
 
+    const onChange = (fields: FieldChangeProps, field: any) => {
+        onFileFieldChange(fields, form, field);
+    };
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const url = qs.stringifyUrl({
@@ -62,7 +76,7 @@ function MessageFileModal() {
                 query,
             });
 
-            await axios.post(url, { ...values, content: values.fileUrl });
+            await axios.post(url, { ...values, content: values.fileName });
             form.reset();
             router.refresh();
             onClose();
@@ -103,7 +117,9 @@ function MessageFileModal() {
                                                 <FileUpload
                                                     endpoint="messageFile"
                                                     value={field.value}
-                                                    onChange={field.onChange}
+                                                    onChange={(fields) =>
+                                                        onChange(fields, field)
+                                                    }
                                                     setUploadErrors={
                                                         setUploadErrors
                                                     }

@@ -30,6 +30,9 @@ async function NavigationSidebar() {
                 },
             },
         },
+        orderBy: {
+            createdAt: "desc",
+        },
     });
 
     return (

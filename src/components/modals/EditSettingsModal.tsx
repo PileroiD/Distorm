@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useForm } from "react-hook-form";
 import {
     Dialog,
@@ -27,6 +28,10 @@ import FileUpload from "../FileUpload";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/useModalStore";
 import { useEffect, useState } from "react";
+import {
+    FieldChangeProps,
+    onFileFieldChange,
+} from "../utils/onFormFileFieldChange";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -66,6 +71,10 @@ function EditServerSettingsModal() {
         }
     }, [server, form]);
 
+    const onChange = (fields: FieldChangeProps, field: any) => {
+        onFileFieldChange(fields, form, field);
+    };
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             await axios.patch(`/api/servers/${server?.id}`, values);
@@ -104,7 +113,9 @@ function EditServerSettingsModal() {
                                                 <FileUpload
                                                     endpoint="serverImage"
                                                     value={field.value}
-                                                    onChange={field.onChange}
+                                                    onChange={(fields) =>
+                                                        onChange(fields, field)
+                                                    }
                                                     setUploadErrors={
                                                         setUploadErrors
                                                     }

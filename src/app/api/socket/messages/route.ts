@@ -10,7 +10,7 @@ export const POST = async (req: NextRequest) => {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const { content, fileUrl = "" } = await req.json();
+        const { content, fileUrl = "", fileType = "" } = await req.json();
         const { searchParams } = new URL(req.url);
         const serverId = searchParams.get("serverId");
         const channelId = searchParams.get("channelId");
@@ -60,6 +60,7 @@ export const POST = async (req: NextRequest) => {
             data: {
                 content,
                 fileUrl,
+                fileType,
                 channelId: channelId as string,
                 memberId: member.id,
             },

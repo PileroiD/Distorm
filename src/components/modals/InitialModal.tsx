@@ -26,6 +26,10 @@ import "@uploadthing/react/styles.css";
 import FileUpload from "../FileUpload";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {
+    FieldChangeProps,
+    onFileFieldChange,
+} from "../utils/onFormFileFieldChange";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -61,6 +65,10 @@ function InitialModal() {
         }
     };
 
+    const onChange = (fields: FieldChangeProps, field: any) => {
+        onFileFieldChange(fields, form, field);
+    };
+
     return (
         <Dialog open>
             <DialogContent className="bg-white text-black p-0 overflow-hidden">
@@ -89,7 +97,9 @@ function InitialModal() {
                                                 <FileUpload
                                                     endpoint="serverImage"
                                                     value={field.value}
-                                                    onChange={field.onChange}
+                                                    onChange={(fields) =>
+                                                        onChange(fields, field)
+                                                    }
                                                     setUploadErrors={
                                                         setUploadErrors
                                                     }

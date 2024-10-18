@@ -1,20 +1,22 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UploadDropzone } from "@/lib/uploadthing";
 import { Json } from "@uploadthing/shared";
 import { FileIcon, X } from "lucide-react";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useState } from "react";
 import { UploadThingError } from "uploadthing/server";
+import { FieldChangeProps } from "./utils/onFormFileFieldChange";
+
+const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
 
 interface FileUploadProps {
     endpoint: "messageFile" | "serverImage";
-    onChange: (url?: string) => void;
+    onChange: (fields: FieldChangeProps) => void;
     value: string;
     setUploadErrors: Dispatch<SetStateAction<string>>;
 }
-
-const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
 
 function FileUpload({
     endpoint,
@@ -22,22 +24,28 @@ function FileUpload({
     value,
     setUploadErrors,
 }: FileUploadProps) {
-    const [fileType, setFileType] = useState<null | string>(null);
+    const [file, setFile] = useState<Record<string, string>>({
+        fileType: "",
+        fileName: "",
+        fileUrl: value,
+    });
 
-    if (value && fileType === "application/pdf") {
+    if (value && file.fileType === "application/pdf" && file.fileUrl) {
         return (
             <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10 ">
                 <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
                 <a
-                    href={value}
+                    href={file.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline break-words"
                 >
-                    {value.length > 50 ? value.slice(0, 50) + "..." : value}
+                    {file.fileName}
                 </a>
                 <button
-                    onClick={() => onChange("")}
+                    onClick={() =>
+                        setFile((prev) => ({ ...prev, fileUrl: "" }))
+                    }
                     className="bg-rose-500 text-white p-1 rounded-full absolute -top-2 -right-2 shadow-sm"
                     type="button"
                 >
@@ -48,19 +56,21 @@ function FileUpload({
     }
 
     if (
-        (value && endpoint === "serverImage") ||
-        (value && allowedImageTypes.includes(fileType!))
+        (value && endpoint === "serverImage" && file.fileUrl) ||
+        (value && allowedImageTypes.includes(file.fileType!) && file.fileUrl)
     ) {
         return (
             <div className="relative h-20 w-20">
                 <Image
                     fill
-                    src={value}
+                    src={file.fileUrl}
                     alt="upload"
                     className="rounded-full object-cover"
                 />
                 <button
-                    onClick={() => onChange("")}
+                    onClick={() =>
+                        setFile((prev) => ({ ...prev, fileUrl: "" }))
+                    }
                     className="bg-rose-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm"
                     type="button"
                 >
@@ -74,9 +84,18 @@ function FileUpload({
         <UploadDropzone
             endpoint={endpoint}
             onClientUploadComplete={(res) => {
-                onChange(res[0]?.url);
+                onChange({
+                    fileUrl: res[0]?.url,
+                    fileType: res[0]?.type,
+                    fileName: res[0]?.name,
+                });
                 setUploadErrors("");
-                setFileType(res[0]?.type);
+                setFile((prev) => ({
+                    ...prev,
+                    fileType: res[0]?.type,
+                    fileName: res[0]?.name,
+                    fileUrl: res[0]?.url,
+                }));
             }}
             onUploadError={(error: UploadThingError<Json>) => {
                 console.log("error upload:>> ", error.message);

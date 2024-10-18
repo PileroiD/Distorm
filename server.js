@@ -15,11 +15,10 @@ app.prepare().then(() => {
 
     const io = new Server(httpServer);
 
-    global.io = io;
-
     io.on("connection", (socket) => {
         console.log("Websocket is connected");
         console.log("socket :>> ", socket.connected);
+        global.io = io;
     });
 
     httpServer

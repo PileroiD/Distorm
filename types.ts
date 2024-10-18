@@ -14,3 +14,16 @@ export type NextApiResponseServerIo = NextApiResponse & {
         };
     };
 };
+
+export type AllowedFileTypes =
+    | "image/jpeg"
+    | "image/png"
+    | "image/gif"
+    | "application/pdf";
+
+export enum AllowedFile {
+    PNG = "image/png",
+    JPEG = "image/jpeg",
+    GIF = "image/gif",
+    PDF = "application/pdf",
+}
