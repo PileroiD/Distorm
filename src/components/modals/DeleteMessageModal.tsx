@@ -13,35 +13,33 @@ import { useModal } from "@/hooks/useModalStore";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import qs from "query-string";
+import { useRouter } from "next/navigation";
 
-function DeleteChannelModal() {
+function DeleteMessageModal() {
+    const router = useRouter();
+
     const {
         isOpen,
         onClose,
         type,
-        data: { channel, server },
+        data: { apiUrl, query },
     } = useModal();
-    const isModalOpen = isOpen && type === "deleteChannel";
+    const isModalOpen = isOpen && type === "deleteMessage";
     const [isLoading, setIsLoading] = useState(false);
 
-    const router = useRouter();
-
-    const onConfirmDeleteChannel = async () => {
+    const onConfirmDeleteMessage = async () => {
         try {
             setIsLoading(true);
 
             const url = qs.stringifyUrl({
-                url: `/api/channels/${channel?.id}`,
-                query: {
-                    serverId: server?.id,
-                },
+                url: apiUrl || "",
+                query,
             });
 
             await axios.delete(url);
-            onClose();
             router.refresh();
+            onClose();
         } catch (err) {
             console.log("err :>> ", err);
         } finally {
@@ -54,14 +52,12 @@ function DeleteChannelModal() {
             <DialogContent className="bg-white text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
-                        Delete channel
+                        Delete message
                     </DialogTitle>
                     <DialogDescription className="text-center text-zinc-500">
-                        Are you sure You want to delete{" "}
-                        <span className="font-semibold text-indigo-500">
-                            {channel?.name}
-                        </span>
-                        ? <br /> This channel will be completely deleted
+                        Are you sure You want to delete this message?
+                        <br />
+                        The message will be completely deleted
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="bg-gray-100 px-6 py-4">
@@ -75,7 +71,7 @@ function DeleteChannelModal() {
                         </Button>
                         <Button
                             disabled={isLoading}
-                            onClick={onConfirmDeleteChannel}
+                            onClick={onConfirmDeleteMessage}
                             variant="primary"
                         >
                             Confirm
@@ -87,4 +83,4 @@ function DeleteChannelModal() {
     );
 }
 
-export default DeleteChannelModal;
+export default DeleteMessageModal;

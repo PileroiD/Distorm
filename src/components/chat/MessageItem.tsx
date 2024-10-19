@@ -1,6 +1,6 @@
 "use client";
 
-import { Member, MemberRole, Message, Profile } from "@prisma/client";
+import { Member, MemberRole } from "@prisma/client";
 import { MessageWithMemberAndProfile } from "./ChatMessages";
 import { format } from "date-fns";
 import UserAvatar from "../UserAvatar";
@@ -18,6 +18,7 @@ import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import axios from "axios";
+import { useModal } from "@/hooks/useModalStore";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
@@ -45,7 +46,7 @@ function MessageItem({
     socketUrl,
 }: MessageItemProps) {
     const [isEditing, setIsEditing] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
+    const { onOpen } = useModal();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -223,7 +224,15 @@ function MessageItem({
                         </ActionTooltip>
                     )}
                     <ActionTooltip label="Delete" side="top">
-                        <Trash className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                        <Trash
+                            onClick={() =>
+                                onOpen("deleteMessage", {
+                                    apiUrl: `${socketUrl}/${message.id}`,
+                                    query: socketQuery,
+                                })
+                            }
+                            className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                        />
                     </ActionTooltip>
                 </div>
             )}
