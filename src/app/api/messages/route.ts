@@ -20,27 +20,17 @@ export const GET = async (req: Request) => {
             return new NextResponse("channelId missing", { status: 400 });
         }
 
-        const lastMessage = await prisma.message.findFirst({
-            where: {
-                channelId,
-            },
-            orderBy: {
-                createdAt: "desc",
-            },
-            select: { id: true },
-        });
-
         let messages: Message[] = [];
 
-        if (lastMessage?.id) {
+        if (cursor !== "1") {
             messages = await prisma.message.findMany({
                 take: MESSAGES_BATCH,
-                // skip: 1,
+                skip: 1,
                 where: {
                     channelId,
                 },
                 cursor: {
-                    id: lastMessage?.id,
+                    id: cursor as string,
                 },
                 include: {
                     member: {
