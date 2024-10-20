@@ -1,4 +1,7 @@
 import ChatHeader from "@/components/chat/ChatHeader";
+import ChatInput from "@/components/chat/ChatInput";
+import ChatMessages from "@/components/chat/ChatMessages";
+import MediaRoom from "@/components/MediaRoom";
 import prisma from "@/lib/client";
 import { getOrCreateConversation } from "@/lib/conversation";
 import { currentProfile } from "@/lib/currentProfile";
@@ -10,9 +13,15 @@ interface ConversationPageProps {
         serverId: string;
         memberId: string;
     };
+    searchParams: {
+        video?: boolean;
+    };
 }
 
-async function ConversationPage({ params }: ConversationPageProps) {
+async function ConversationPage({
+    params,
+    searchParams,
+}: ConversationPageProps) {
     const { serverId, memberId: memberTwoId } = params;
 
     const profile = await currentProfile();
@@ -56,6 +65,34 @@ async function ConversationPage({ params }: ConversationPageProps) {
                 serverId={serverId}
                 type="conversation"
             />
+            {searchParams.video && (
+                <MediaRoom chatId={conversation.id} video={true} audio={true} />
+            )}
+            {!searchParams.video && (
+                <>
+                    <ChatMessages
+                        member={currentMember}
+                        name={otherMember.profile.name}
+                        chatId={conversation.id}
+                        type="conversation"
+                        apiUrl="/api/direct-messages"
+                        paramKey="conversationId"
+                        paramValue={conversation.id}
+                        socketUrl="/api/socket/direct-messages"
+                        socketQuery={{
+                            conversationId: conversation.id,
+                        }}
+                    />
+                    <ChatInput
+                        name={otherMember.profile.name}
+                        type="conversation"
+                        apiUrl="/api/socket/direct-messages"
+                        query={{
+                            conversationId: conversation.id,
+                        }}
+                    />
+                </>
+            )}
         </div>
     );
 }
