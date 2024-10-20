@@ -80,7 +80,13 @@ export const DELETE = async (
             content: "This message has been deleted",
             deleted: true,
         },
+        include: { member: { include: { profile: true } } },
     });
+
+    if ((global as any)?.io) {
+        const updateKey = `chat:${deletedMessage.channelId}:messages:update`;
+        (global as any).io.emit(updateKey, deletedMessage);
+    }
 
     return NextResponse.json(deletedMessage);
 };

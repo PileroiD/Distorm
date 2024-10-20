@@ -73,9 +73,9 @@ export const POST = async (req: NextRequest) => {
             },
         });
 
-        const channelKey = `chat:${channelId}:messages`;
         if ((global as any)?.io) {
-            (global as any).io.emit(channelKey, message);
+            const addKey = `chat:${channelId}:messages`;
+            (global as any).io.emit(addKey, message);
         }
 
         return NextResponse.json(message);
