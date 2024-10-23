@@ -51,11 +51,13 @@ const formSchema = z.object({
 });
 
 interface InitialModalProps {
-    initServers: (Server & {
-        _count: {
-            members: number;
-        };
-    })[];
+    initServers:
+        | (Server & {
+              _count: {
+                  members: number;
+              };
+          })[]
+        | null;
 }
 
 function InitialModal({ initServers }: InitialModalProps) {
@@ -182,61 +184,70 @@ function InitialModal({ initServers }: InitialModalProps) {
                             </DialogTitle>
                         </DialogHeader>
                         <div className="flex flex-col items-center">
-                            {initServers?.map((server) => (
-                                <HoverCard key={server.id}>
-                                    <HoverCardTrigger
-                                        asChild
-                                        className="w-2/3 bg-zinc-100 transition rounded-md mb-2 hover:bg-purple-100"
-                                    >
-                                        <Button
-                                            onClick={() =>
-                                                router.push(
-                                                    `/invite/${server.inviteCode}`
-                                                )
-                                            }
-                                            variant="link"
-                                            className="text-black text-lg font-semibold"
+                            {!!initServers?.length ? (
+                                initServers?.map((server) => (
+                                    <HoverCard key={server.id}>
+                                        <HoverCardTrigger
+                                            asChild
+                                            className="w-2/3 bg-zinc-100 transition rounded-md mb-2 hover:bg-purple-100"
                                         >
-                                            @{server.name}
-                                        </Button>
-                                    </HoverCardTrigger>
-                                    <HoverCardContent
-                                        className="w-80"
-                                        side="left"
-                                    >
-                                        <div className="flex gap-3">
-                                            <Avatar>
-                                                <AvatarImage
-                                                    src={server?.imageUrl}
-                                                    className="object-cover"
-                                                />
-                                                <AvatarFallback>
-                                                    {server.name.slice(0, 2)}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                            <div>
-                                                <h4 className="text-sm font-semibold ">
-                                                    @{server.name}
-                                                </h4>
-                                                <p className="text-sm text-zinc-400">
-                                                    members:{" "}
-                                                    {server._count.members}
-                                                </p>
-                                                <div className="flex items-center pt-2">
-                                                    <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />
-                                                    <span className="text-xs text-muted-foreground">
-                                                        Created:{" "}
-                                                        {format(
-                                                            server.createdAt,
-                                                            "MM/dd/yyyy"
+                                            <Button
+                                                onClick={() =>
+                                                    router.push(
+                                                        `/invite/${server.inviteCode}`
+                                                    )
+                                                }
+                                                variant="link"
+                                                className="text-black text-lg font-semibold"
+                                            >
+                                                @{server.name}
+                                            </Button>
+                                        </HoverCardTrigger>
+                                        <HoverCardContent
+                                            className="w-80"
+                                            side="left"
+                                        >
+                                            <div className="flex gap-3">
+                                                <Avatar>
+                                                    <AvatarImage
+                                                        src={server?.imageUrl}
+                                                        className="object-cover"
+                                                    />
+                                                    <AvatarFallback>
+                                                        {server.name.slice(
+                                                            0,
+                                                            2
                                                         )}
-                                                    </span>
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div>
+                                                    <h4 className="text-sm font-semibold ">
+                                                        @{server.name}
+                                                    </h4>
+                                                    <p className="text-sm text-zinc-400">
+                                                        members:{" "}
+                                                        {server._count.members}
+                                                    </p>
+                                                    <div className="flex items-center pt-2">
+                                                        <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />
+                                                        <span className="text-xs text-muted-foreground">
+                                                            Created:{" "}
+                                                            {format(
+                                                                server.createdAt,
+                                                                "MM/dd/yyyy"
+                                                            )}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </HoverCardContent>
-                                </HoverCard>
-                            ))}
+                                        </HoverCardContent>
+                                    </HoverCard>
+                                ))
+                            ) : (
+                                <div className="text-zinc-500 font-semibold">
+                                    There are no servers yet
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
