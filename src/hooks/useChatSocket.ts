@@ -53,7 +53,7 @@ export const useChatSocket = ({
                 };
             });
         },
-        [queryKey]
+        [queryKey, queryClient]
     );
 
     const onAddMessage = useCallback(
@@ -82,7 +82,7 @@ export const useChatSocket = ({
                 };
             });
         },
-        [queryKey]
+        [queryKey, queryClient]
     );
 
     useEffect(() => {

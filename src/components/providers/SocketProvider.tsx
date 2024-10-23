@@ -3,10 +3,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useContext, useEffect, useState } from "react";
 import { socket } from "../../socket";
-import { DefaultEventsMap, Socket } from "socket.io";
+import { Socket } from "socket.io-client";
 
 type SocketContextType = {
-    socket: Socket<DefaultEventsMap, DefaultEventsMap> | null;
+    socket: Socket | null;
     isConnected: boolean;
     transport: string;
 };
