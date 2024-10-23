@@ -30,7 +30,7 @@ export default function MediaRoom({ chatId, video, audio }: MediaRoomProps) {
     useEffect(() => {
         if (!user?.firstName) return;
 
-        const name = `${user.firstName} ${user.lastName}`;
+        const name = `${user.firstName}${user.lastName ? user.lastName : ""}`;
 
         (async () => {
             try {
@@ -44,8 +44,6 @@ export default function MediaRoom({ chatId, video, audio }: MediaRoomProps) {
             }
         })();
     }, [user?.firstName, user?.lastName, chatId]);
-
-    console.log("token :>> ", token);
 
     if (token === "") {
         return (

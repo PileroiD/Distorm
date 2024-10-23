@@ -3,6 +3,11 @@ import prisma from "@/lib/client";
 import { initialProfile } from "@/lib/initialProfile";
 import { redirect } from "next/navigation";
 
+enum ServerNames {
+    CODING = "Coding",
+    PILEROID = "Pileroid",
+}
+
 export default async function SetupPage() {
     const profile = await initialProfile();
 
@@ -20,5 +25,18 @@ export default async function SetupPage() {
         return redirect(`/servers/${server.id}`);
     }
 
-    return <InitialModal />;
+    const servers = await prisma.server.findMany({
+        where: {
+            OR: [{ name: ServerNames.CODING }, { name: ServerNames.PILEROID }],
+        },
+        include: {
+            _count: {
+                select: {
+                    members: true,
+                },
+            },
+        },
+    });
+
+    return <InitialModal initServers={servers} />;
 }
