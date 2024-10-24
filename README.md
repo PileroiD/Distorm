@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Distorm
 
-## Getting Started
+Distorm is a Discord clone where users can chat with friends, join groups for collaborative conversations, and engage in video and audio conferences. Just like in the original Discord, there are server admins, channel moderators, and regular guests.
 
-First, run the development server:
+## Installation and Setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+To install and run the project, follow these steps:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/your-username/distorm.git
+    ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. Navigate to the project directory:
+    ```bash
+    cd distorm
+    ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-## Learn More
+4. Start the development server:
+    ```bash
+    npm run dev
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+The project will be accessible at `http://localhost:3003`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Chat with Friends
 
-## Deploy on Vercel
+After logging in, you can join existing groups or create new ones. Use the text chat for communication or join voice and video conferences.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Server Management
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Admins can manage their servers, assign moderators, and create or delete channels.
+
+### Moderation
+
+Channel moderators can control activity, manage users, and ensure rules are followed.
+
+## Authors
+
+* [PileroiD](https://github.com/PileroiD) - Initial work
+
+## Website
+
+* https://distorm.website/
+
+## License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT) - see the [LICENSE](LICENSE) file for details.
