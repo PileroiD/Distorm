@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
-import { Plus } from "lucide-react";
+import { Plus, Send } from "lucide-react";
 import { Input } from "../ui/input";
 import qs from "query-string";
 import axios from "axios";
@@ -92,13 +92,19 @@ function ChatInput({ apiUrl, query, name, type }: ChatInputProps) {
                                         className="px-14 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
                                         {...field}
                                     />
-                                    <div className="absolute right-6 top-7 flex items-center">
+                                    <div className="absolute right-6 top-7 flex items-center gap-2">
                                         <EmojiPicker
                                             onChange={(emoji: string) =>
                                                 field.onChange(
                                                     `${field.value} ${emoji}`
                                                 )
                                             }
+                                        />
+                                        <Send
+                                            onClick={() =>
+                                                form.handleSubmit(onSubmit)()
+                                            }
+                                            className="text-zinc-400 cursor-pointer hover:text-zinc-200"
                                         />
                                     </div>
                                 </div>
