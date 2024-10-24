@@ -10,8 +10,8 @@ import QueryProvider from "@/components/providers/QueryProvider";
 const font = Open_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Distorm chats",
-    description: "Distorm chats",
+    title: "Distorm",
+    description: "Distorm",
 };
 
 export default function RootLayout({

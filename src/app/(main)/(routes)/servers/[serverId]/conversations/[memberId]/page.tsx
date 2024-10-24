@@ -6,6 +6,7 @@ import prisma from "@/lib/client";
 import { getOrCreateConversation } from "@/lib/conversation";
 import { currentProfile } from "@/lib/currentProfile";
 import { auth } from "@clerk/nextjs/server";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 interface ConversationPageProps {
@@ -15,6 +16,34 @@ interface ConversationPageProps {
     };
     searchParams: {
         video?: boolean;
+    };
+}
+
+export async function generateMetadata({
+    params,
+}: ConversationPageProps): Promise<Metadata> {
+    const member = await prisma.member.findUnique({
+        where: {
+            id: params?.memberId,
+        },
+        include: {
+            profile: {
+                select: {
+                    name: true,
+                },
+            },
+        },
+    });
+
+    const server = await prisma.server.findUnique({
+        where: {
+            id: params?.serverId,
+        },
+    });
+
+    return {
+        title: `Distorm - ${server?.name}: ${member?.profile.name}`,
+        description: `${server?.name}: ${member?.profile.name}`,
     };
 }
 

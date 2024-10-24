@@ -6,12 +6,34 @@ import prisma from "@/lib/client";
 import { currentProfile } from "@/lib/currentProfile";
 import { auth } from "@clerk/nextjs/server";
 import { ChannelType } from "@prisma/client";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 interface ChannelPageProps {
     params: {
         serverId: string;
         channelId: string;
+    };
+}
+
+export async function generateMetadata({
+    params,
+}: ChannelPageProps): Promise<Metadata> {
+    const channel = await prisma.channel.findUnique({
+        where: {
+            id: params?.channelId,
+        },
+    });
+
+    const server = await prisma.server.findUnique({
+        where: {
+            id: params?.serverId,
+        },
+    });
+
+    return {
+        title: `Distorm - ${server?.name}: ${channel?.name}`,
+        description: `${server?.name}: ${channel?.name}`,
     };
 }
 
